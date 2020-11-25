@@ -68,7 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.StatVi
         return itemList.size();
     }
 
-    public String timeToString(long time) {
+    public static String timeToString(long time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return simpleDateFormat.format(new Date(time));
     }

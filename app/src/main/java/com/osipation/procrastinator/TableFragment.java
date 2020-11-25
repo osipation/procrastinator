@@ -4,10 +4,12 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +42,7 @@ public class TableFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fromTime = getArguments().getLong("FT", 0);
-        toTime = getArguments().getLong("TT", 0);
+        toTime = getArguments().getLong("TT", 86400000);
         if (toTime < fromTime) {
             toTime += 86400000;
         }
@@ -52,7 +54,7 @@ public class TableFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_table, container, false);
-        view.setBackgroundColor(Color.WHITE);
+//        view.setBackground(new ColorDrawable(ContextCompat.getColor(getActivity(), android.R.color.white)));
         timeResultRV = view.findViewById(R.id.rv_table);
         timeResultRV.setHasFixedSize(true);
 
@@ -81,7 +83,7 @@ public class TableFragment extends Fragment {
                         recyclerAdapter.notifyDataSetChanged();
                     }
                 });
-                setOnNotification();
+                setOnNotification(statsItem);
             }
         });
         return timerRunnable;
@@ -103,12 +105,14 @@ public class TableFragment extends Fragment {
         return resultList;
     }
 
-    public void setOnNotification() {
+    public void setOnNotification(StatsItem statsItem) {
+
         String title = "Procrastinator";
         String message = "Интервал пройден, отметь свой результат!";
 //        Intent fragmentIntent = new Intent(getActivity(), MainActivity.class);
         Intent fragmentIntent = new Intent(getActivity(), MainActivity.class);
         fragmentIntent.putExtra("fragment", "notification");
+        fragmentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, fragmentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
