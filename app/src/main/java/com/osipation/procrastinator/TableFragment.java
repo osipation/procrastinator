@@ -29,7 +29,6 @@ import java.util.List;
 
 
 public class TableFragment extends Fragment {
-    private int notificationId = 1;
 
     public long fromTime;
     public long toTime;
@@ -46,7 +45,6 @@ public class TableFragment extends Fragment {
         if (toTime < fromTime) {
             toTime += 86400000;
         }
-        managerCompat = NotificationManagerCompat.from(getActivity());
     }
 
     @Override
@@ -83,7 +81,7 @@ public class TableFragment extends Fragment {
                         recyclerAdapter.notifyDataSetChanged();
                     }
                 });
-                setOnNotification(statsItem);
+                setNotification(statsItem);
             }
         });
         return timerRunnable;
@@ -105,11 +103,13 @@ public class TableFragment extends Fragment {
         return resultList;
     }
 
-    public void setOnNotification(StatsItem statsItem) {
+    public void setNotification(StatsItem statsItem) {
+        String fTime = RecyclerAdapter.timeToString(statsItem.getFromTime());
+        String tTime = RecyclerAdapter.timeToString(statsItem.getToTime());
 
+//        String GROUP_KEY_STAT = "key of stat";
         String title = "Procrastinator";
-        String message = "Интервал пройден, отметь свой результат!";
-//        Intent fragmentIntent = new Intent(getActivity(), MainActivity.class);
+        String message = "Интервал " + fTime + " - " + tTime + " пройден, отметь свой результат!";
         Intent fragmentIntent = new Intent(getActivity(), MainActivity.class);
         fragmentIntent.putExtra("fragment", "notification");
         fragmentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -120,19 +120,57 @@ public class TableFragment extends Fragment {
 //        broadcastIntent.putExtra("toastMessage", message);
 //        PendingIntent actionIntent = PendingIntent.getBroadcast(getActivity(),
 //                0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int notificationId = (int) System.currentTimeMillis();
         Notification notification = new NotificationCompat.Builder(getActivity(), App.CHANNEL)
                 .setSmallIcon(R.drawable.ic_infinity)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setColor(Color.BLUE)
+//                .setGroup(GROUP_KEY_STAT)
 //                .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
-//                .setVibrate(new long[] {1000,1000,1000,1000})
                 .build();
+        managerCompat = NotificationManagerCompat.from(getActivity());
         managerCompat.notify(notificationId, notification);
-
     }
+
+//    public void setSummaryNotification(StatsItem statsItem) {
+//        String fTime = RecyclerAdapter.timeToString(statsItem.getFromTime());
+//        String tTime = RecyclerAdapter.timeToString(statsItem.getToTime());
+//        String countOfMessages = Integer.toString(recyclerAdapter.getItemCount());
+//        String GROUP_KEY_STAT = "key of stat";
+//        String title = "Procrastinator";
+//        String message = "Интервал " + fTime + " - " + tTime + " пройден, отметь свой результат!";
+//        Intent fragmentIntent = new Intent(getActivity(), MainActivity.class);
+//        fragmentIntent.putExtra("fragment", "notification");
+//        fragmentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, fragmentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        int notificationId = 1;
+//
+//
+//        Notification summaryNotification = new NotificationCompat.Builder(getActivity(), App.CHANNEL)
+//                .setSmallIcon(R.drawable.ic_infinity)
+//                .setDefaults(Notification.DEFAULT_VIBRATE)
+//                .setStyle(new NotificationCompat.InboxStyle()
+//                        .addLine(title + " " + message)
+//                        .setBigContentTitle(countOfMessages + " интервалов пройдено")
+//                        .setSummaryText("Отметь свой результат!"))
+//                .setCategory(NotificationCompat.CATEGORY_ALARM)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setContentIntent(contentIntent)
+//                .setAutoCancel(true)
+//                .setColor(Color.BLUE)
+//                .setGroup(GROUP_KEY_STAT)
+//                .setGroupSummary(true)
+//                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
+////                .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
+//                .build();
+//        managerCompat = NotificationManagerCompat.from(getActivity());
+//        managerCompat.notify(notificationId, summaryNotification);
+//
+//    }
 }
