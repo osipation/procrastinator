@@ -81,7 +81,7 @@ public class TableFragment extends Fragment {
                         recyclerAdapter.notifyDataSetChanged();
                     }
                 });
-                setNotification(statsItem);
+                createNotification(statsItem);
             }
         });
         return timerRunnable;
@@ -103,7 +103,7 @@ public class TableFragment extends Fragment {
         return resultList;
     }
 
-    public void setNotification(StatsItem statsItem) {
+    public void createNotification(StatsItem statsItem) {
         String fTime = RecyclerAdapter.timeToString(statsItem.getFromTime());
         String tTime = RecyclerAdapter.timeToString(statsItem.getToTime());
 
